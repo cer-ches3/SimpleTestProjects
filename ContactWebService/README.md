@@ -13,7 +13,7 @@
 ```
 По умолчанию, для доступа к БД используются следующие данные:
 ```
-    url: jdbc:postgresql://localhost:5432/contacts
+    url: jdbc:postgresql://localhost:5433/contacts
     username: postgres
     password: postgres
 ```

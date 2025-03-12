@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact List</title>
+    <link rel="stylesheet" href="/contact-list.css">
 </head>
 <body>
-<h1>Contact List</h1>
-<table>
+<header class="header">
+    <h1>Contact List</h1>
+</header>
+<table class="table" border="1">
     <tr>
         <th>ID</th>
         <th>First Name</th>
@@ -22,11 +25,13 @@
         <td th:text="${contact.email}"></td>
         <td th:text="${contact.phone}"></td>
         <td>
-            <a th:href="@{/contacts/edit/{id}(id=${contact.id})}">Edit</a>
-            <a th:href="@{/contacts/delete/{id}(id=${contact.id})}">Delete</a>
+            <a class="button" th:href="@{/contacts/edit/{id}(id=${contact.id})}">Edit</a>
+            <a class="button" th:href="@{/contacts/delete/{id}(id=${contact.id})}">Delete</a>
         </td>
     </tr>
 </table>
-<a href="/contacts/add">Add Contact</a>
+<div class="for_add_button">
+    <a type="button" class="button" href="/contacts/add">Add Contact</a>
+</div>
 </body>
 </html>
