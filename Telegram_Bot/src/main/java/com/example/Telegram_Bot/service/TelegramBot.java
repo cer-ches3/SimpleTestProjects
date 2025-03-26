@@ -16,8 +16,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
@@ -35,6 +33,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfiguration botConfiguration;
     private final UserRepository userRepository;
 
+    String messageText = "";
+    long chatId = 0L;
+
     private static final String HELP_TEXT = "/start - Позволяет зарегистрировать пользователя в базе данных бота. Эту команду нужно обязательно выполнять при первом использовании бота;\n" +
             "/help - Позволяет получить информацию о функциях приложения;\n" +
             "/get_my_data - Позволяет получить данные текущего пользователя, зарегистрированного в базе данных бота;\n" +
@@ -47,7 +48,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(BotConfiguration botConfiguration, UserRepository userRepository) {
         this.botConfiguration = botConfiguration;
         this.userRepository = userRepository;
-        List<BotCommand> listOfCommand = new ArrayList();
+        List<BotCommand> listOfCommand = new ArrayList<>();
         listOfCommand.add(new BotCommand("/start", "Зарегистрировать пользователя в базе данных бота"));
         listOfCommand.add(new BotCommand("/help", "Получить информацию о функциях приложения"));
         listOfCommand.add(new BotCommand("/get_my_data", "Получить данные текущего пользователя"));
@@ -68,8 +69,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
+            messageText = update.getMessage().getText();
+            chatId = update.getMessage().getChatId();
 
             switch (messageText) {
                 case "/start":
@@ -234,7 +235,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private String getTemperature() throws IOException {
-
         String url = "https://www.gismeteo.ru/weather-bezhetsk-4296/now/";
 
         Document document = Jsoup.connect(url).get();
