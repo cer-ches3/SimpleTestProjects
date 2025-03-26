@@ -4,6 +4,10 @@ import com.example.Telegram_Bot.configuration.BotConfiguration;
 import com.example.Telegram_Bot.entity.User;
 import com.example.Telegram_Bot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -12,10 +16,16 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +39,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             "/help - Позволяет получить информацию о функциях приложения;\n" +
             "/get_my_data - Позволяет получить данные текущего пользователя, зарегистрированного в базе данных бота;\n" +
             "/delete_my_data - Позволяет удалить данные текущего пользователя из базы данных бота;\n" +
-            "/get_all_users - Позволяет получить данные всех пользователей, зарегистрированных в базе данных бота;";
+            "/get_all_users - Позволяет получить данные всех пользователей, зарегистрированных в базе данных бота;\n" +
+            "/get_temp - Позволяет получить температуру в Бежецке;\n" +
+            "/get_time - Позволяет получить текущие дату и время;\n" +
+            "/get_course - Позволяет получить курс валют на текущую дату;";
 
     public TelegramBot(BotConfiguration botConfiguration, UserRepository userRepository) {
         this.botConfiguration = botConfiguration;
@@ -40,6 +53,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         listOfCommand.add(new BotCommand("/get_my_data", "Получить данные текущего пользователя"));
         listOfCommand.add(new BotCommand("/delete_my_data", "Удалить данные текущего пользователя из базы данных бота"));
         listOfCommand.add(new BotCommand("/get_all_users", "Получить данные всех пользователей, зарегистрированных в базе данных бота"));
+        listOfCommand.add(new BotCommand("/get_temp", "Получить температуру в Бежецке"));
+        listOfCommand.add(new BotCommand("/get_time", "Получить текущие дату и время"));
+        listOfCommand.add(new BotCommand("/get_course", "Получить курс валют на текущую дату"));
 
         try {
             this.execute(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
@@ -86,6 +102,29 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/get_all_users":
                     log.info("Call onUpdateReceived -> /show_аll_users.");
                     sendMessage(chatId, showAllUsers());
+                    break;
+
+                case "/get_temp":
+                    log.info("Call onUpdateReceived -> /get_temp.");
+                    try {
+                        sendMessage(chatId, getTemperature());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+
+                case "/get_time":
+                    log.info("Call onUpdateReceived -> /get_time.");
+                        sendMessage(chatId, getCurrentDateTime());
+                    break;
+
+                case "/get_course":
+                    log.info("Call onUpdateReceived -> /get_course.");
+                    try {
+                        sendMessage(chatId, getCourse());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
 
                 default:
@@ -192,5 +231,49 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         log.info("Load date all users.");
         return builder.toString();
+    }
+
+    private String getTemperature() throws IOException {
+
+        String url = "https://www.gismeteo.ru/weather-bezhetsk-4296/now/";
+
+        Document document = Jsoup.connect(url).get();
+        Element element = document.selectFirst("temperature-value");
+        String temperature = element.attr("value");
+
+        return "Сейчас в Бежецке " +  temperature + "\u00B0C";
+    }
+
+    private String getCourse() throws IOException {
+        String url = "https://www.cbr.ru/currency_base/daily/";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Курс валют по данным ЦР России на ").append(LocalDate.now()).append('\n');
+
+        Document document = Jsoup.connect(url).get();
+        Element table = document.select("table.data").first();
+        Elements rows = table.select("tr"); // Получаем все строки таблицы
+
+        for (int i = 1; i < rows.size(); i++) {
+            Element row = rows.get(i);
+            Elements cols = row.select("td"); // Получаем все ячейки строки
+
+            if (cols.size() >= 2) {
+                String currency = cols.get(3).text();
+                String rate = cols.get(4).text();
+
+                builder.append("Валюта: ").append(currency).append('\n')
+                        .append("Курс: ").append(rate).append('\n')
+                        .append("-------------").append('\n');
+
+            }
+        }
+        return builder.toString();
+    }
+
+    private String getCurrentDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
+        return "Сейчас " + formatter.format(now);
     }
 }

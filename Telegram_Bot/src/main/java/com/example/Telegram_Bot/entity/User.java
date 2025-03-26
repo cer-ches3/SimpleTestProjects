@@ -3,7 +3,6 @@ package com.example.Telegram_Bot.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
