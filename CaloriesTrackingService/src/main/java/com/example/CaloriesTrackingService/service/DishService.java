@@ -4,18 +4,35 @@ import com.example.CaloriesTrackingService.entity.Dish;
 import com.example.CaloriesTrackingService.repositories.DishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DishService implements CRUDService<Dish>{
+public class DishService implements CRUDService<Dish> {
     private final DishRepository dishRepository;
+
+    @Value("${spring.datasource.url}")
+    private String urlForDB;
+
+    @Value("${spring.datasource.username}")
+    private String usernameForDB;
+
+    @Value("${spring.datasource.password}")
+    private String passwordForDB;
 
     @Override
     public ResponseEntity getById(long id) {
@@ -124,6 +141,40 @@ public class DishService implements CRUDService<Dish>{
         return ResponseEntity.status(HttpStatus.OK).body(MessageFormat.format("Dish with ID: {0} is deleted.", id));
     }
 
+    public ResponseEntity initDishes(String filePath) {
+        log.info("Table dashes_list is cleared.");
+        dishRepository.deleteAll();
+
+        String insertSQL = "INSERT INTO dishes_list (name, count_calories_per_serving, proteins, fats, carbohydrates) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = DriverManager.getConnection(urlForDB, usernameForDB, passwordForDB);
+             BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] values = line.split(";");
+                if (values.length == 5) {
+                    preparedStatement.setString(1, values[0]);
+                    preparedStatement.setDouble(2, Double.parseDouble(values[1]));
+                    preparedStatement.setDouble(3, Double.parseDouble(values[2]));
+                    preparedStatement.setDouble(4, Double.parseDouble(values[3]));
+                    preparedStatement.setDouble(5, Double.parseDouble(values[4]));
+                    preparedStatement.addBatch();
+                }
+            }
+            preparedStatement.executeBatch();
+
+            log.info("The table has been successfully filled with data from the file.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("The table has been successfully filled with data from the file.");
+        } catch (IOException e) {
+            log.error("Error reading the file: {}!", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error reading the file: " + e.getMessage());
+        } catch (SQLException e) {
+            log.error("Error when interacting with the database: {}!", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error when interacting with the database: " + e.getMessage());
+        }
+    }
+
     private boolean nameIsValid(String name) {
         log.info("Call nameIsValid.");
 
@@ -155,4 +206,6 @@ public class DishService implements CRUDService<Dish>{
 
         return carbohydrates >= 0.1;
     }
+
+
 }

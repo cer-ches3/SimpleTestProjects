@@ -39,4 +39,9 @@ public class DishControllerV1 {
     public ResponseEntity deleteDishById(@PathVariable long id) {
         return dishService.deleteById(id);
     }
+
+    @PostMapping("/init")
+    public ResponseEntity initDishes() {
+        return dishService.initDishes("src/main/resources/other/tablica_produktov.csv");
+    }
 }
