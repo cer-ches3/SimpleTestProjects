@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/calories_tracking_service
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    show-sql: true
