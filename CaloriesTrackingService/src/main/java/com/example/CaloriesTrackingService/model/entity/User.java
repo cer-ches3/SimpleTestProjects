@@ -1,5 +1,8 @@
-package com.example.CaloriesTrackingService.entity;
+package com.example.CaloriesTrackingService.model.entity;
 
+import com.example.CaloriesTrackingService.model.enums.Gender;
+import com.example.CaloriesTrackingService.model.enums.Goal;
+import com.example.CaloriesTrackingService.model.enums.LifeStyle;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

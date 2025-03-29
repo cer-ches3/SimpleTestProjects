@@ -1,4 +1,4 @@
-package com.example.CaloriesTrackingService.entity;
+package com.example.CaloriesTrackingService.model.enums;
 
 public enum Goal {
     WEIGHT_LOSS, MAINTENANCE, WEIGHT_GAIN

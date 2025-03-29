@@ -1,8 +1,8 @@
 package com.example.CaloriesTrackingService.service;
 
-import com.example.CaloriesTrackingService.entity.Gender;
-import com.example.CaloriesTrackingService.entity.LifeStyle;
-import com.example.CaloriesTrackingService.entity.User;
+import com.example.CaloriesTrackingService.model.entity.User;
+import com.example.CaloriesTrackingService.model.enums.Gender;
+import com.example.CaloriesTrackingService.model.enums.LifeStyle;
 import com.example.CaloriesTrackingService.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements CRUDService<User>{
+public class UserService implements CRUDService<User> {
     private final UserRepository userRepository;
 
     @Override
@@ -147,7 +147,7 @@ public class UserService implements CRUDService<User>{
         double activityIndex = definitionActivityIndex(lifeStyle);
 
         if (gender.toString().equals("MALE")) {
-            dailyCaloriesIntake = (88.36 + (13.4 * weight)+ (4.8 * height) - (5.7 * age)) * activityIndex;
+            dailyCaloriesIntake = (88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * activityIndex;
         } else {
             dailyCaloriesIntake = (447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * activityIndex;
         }
@@ -168,8 +168,7 @@ public class UserService implements CRUDService<User>{
             case SEDENTARY -> {
                 activityIndex += 1.2;
             }
-            case WORKOUT_ONE_THREE ->
-            {
+            case WORKOUT_ONE_THREE -> {
                 activityIndex += 1.375;
             }
             case WORKOUT_THREE_FIVE -> {
@@ -185,6 +184,7 @@ public class UserService implements CRUDService<User>{
 
         return activityIndex;
     }
+
     private boolean nameIsValid(String name) {
         log.info("Call nameIsValid.");
 

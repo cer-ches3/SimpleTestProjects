@@ -1,4 +1,4 @@
-package com.example.CaloriesTrackingService.entity;
+package com.example.CaloriesTrackingService.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

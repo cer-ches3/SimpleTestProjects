@@ -1,6 +1,6 @@
 package com.example.CaloriesTrackingService.service;
 
-import com.example.CaloriesTrackingService.entity.Dish;
+import com.example.CaloriesTrackingService.model.entity.Dish;
 import com.example.CaloriesTrackingService.repositories.DishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.example.CaloriesTrackingService.repositories;
 
-import com.example.CaloriesTrackingService.entity.User;
+import com.example.CaloriesTrackingService.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

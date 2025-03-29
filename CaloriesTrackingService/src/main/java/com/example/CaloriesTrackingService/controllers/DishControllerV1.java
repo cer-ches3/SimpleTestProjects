@@ -1,7 +1,6 @@
 package com.example.CaloriesTrackingService.controllers;
 
-import com.example.CaloriesTrackingService.entity.Dish;
-import com.example.CaloriesTrackingService.entity.User;
+import com.example.CaloriesTrackingService.model.entity.Dish;
 import com.example.CaloriesTrackingService.service.DishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
