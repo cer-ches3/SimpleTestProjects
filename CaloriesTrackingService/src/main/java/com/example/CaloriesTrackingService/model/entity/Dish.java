@@ -1,13 +1,17 @@
 package com.example.CaloriesTrackingService.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "dishes_list")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

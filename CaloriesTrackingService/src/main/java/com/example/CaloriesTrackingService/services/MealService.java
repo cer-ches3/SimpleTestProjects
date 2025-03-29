@@ -1,4 +1,4 @@
-package com.example.CaloriesTrackingService.service;
+package com.example.CaloriesTrackingService.services;
 
 import com.example.CaloriesTrackingService.model.dto.MealDto;
 import com.example.CaloriesTrackingService.model.entity.Dish;

@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/calories_tracking_service
+#    url: jdbc:postgresql://localhost:5432/calories_tracking_service
+    url: jdbc:postgresql://localhost:5433/calories_tracking_service
     username: postgres
     password: postgres
   jpa:
@@ -11,6 +12,6 @@ spring:
 server:
   port: 8080
 
-#logging:
-#  level:
-#    root: debug
+logging:
+  level:
+    root: debug

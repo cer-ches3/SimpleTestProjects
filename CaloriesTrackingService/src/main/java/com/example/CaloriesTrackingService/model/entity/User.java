@@ -4,13 +4,17 @@ import com.example.CaloriesTrackingService.model.enums.Gender;
 import com.example.CaloriesTrackingService.model.enums.Goal;
 import com.example.CaloriesTrackingService.model.enums.LifeStyle;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "users_list")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

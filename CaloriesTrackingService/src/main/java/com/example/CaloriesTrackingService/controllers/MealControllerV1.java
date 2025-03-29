@@ -1,7 +1,7 @@
 package com.example.CaloriesTrackingService.controllers;
 
 import com.example.CaloriesTrackingService.model.dto.MealDto;
-import com.example.CaloriesTrackingService.service.MealService;
+import com.example.CaloriesTrackingService.services.MealService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

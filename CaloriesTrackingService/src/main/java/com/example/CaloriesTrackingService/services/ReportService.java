@@ -1,4 +1,4 @@
-package com.example.CaloriesTrackingService.service;
+package com.example.CaloriesTrackingService.services;
 
 import com.example.CaloriesTrackingService.model.entity.Dish;
 import com.example.CaloriesTrackingService.model.entity.Meal;
@@ -20,7 +20,7 @@ public class ReportService {
     private final UserRepository userRepository;
     private final MealRepository mealRepository;
 
-    public ResponseEntity getReportForToday(long userId, LocalDate date) {
+    public ResponseEntity getReportForDay(long userId, LocalDate date) {
         StringBuilder builder = new StringBuilder();
         builder.append("Отчет на ")
                 .append(date)

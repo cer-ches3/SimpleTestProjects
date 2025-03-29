@@ -1,6 +1,6 @@
 package com.example.CaloriesTrackingService.controllers;
 
-import com.example.CaloriesTrackingService.service.ReportService;
+import com.example.CaloriesTrackingService.services.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class ReportControllerV1 {
 
     @GetMapping("meals_today/{date}/{id}")
     private ResponseEntity getReportForDay(@PathVariable LocalDate date, @PathVariable long id) {
-        return reportService.getReportForToday(id ,date);
+        return reportService.getReportForDay(id ,date);
     }
 
     @GetMapping("check_intake/{date}/{id}")

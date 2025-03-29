@@ -1,4 +1,4 @@
-package com.example.CaloriesTrackingService.service;
+package com.example.CaloriesTrackingService.services;
 
 import org.springframework.http.ResponseEntity;
 
